@@ -23,4 +23,7 @@ public class ScController {
 	public void www() {
 		System.out.println("新增方法");
 	}
+	public void www2() {
+		System.out.println("新增方法");
+	}
 }
