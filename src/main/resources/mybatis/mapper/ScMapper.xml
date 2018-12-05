@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ujiuye.mapper.ScMapper">
+	<insert id="saveSc" parameterType="java.util.List">
+		insert into sc (name,lowprice,avgprice,hprice,guige,unit,creatdate)
+		values
+		<foreach collection="list" item="sc" separator=",">
+			(#{sc.name},#{sc.lowprice},#{sc.avgprice},#{sc.hprice},#{sc.guige},#{sc.unit},#{sc.creatdate})
+		</foreach>
+	</insert>
+
+	<select id="getSc" resultType="com.ujiuye.bean.Sc">
+		select * from sc where creatdate between #{begin} and #{end};
+	</select>
+</mapper>

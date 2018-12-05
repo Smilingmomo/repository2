@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="js/echarts.common.min.js"></script>
+<script type="text/javascript" src="js/jquery.min.js"></script>
+</head>
+<body>
+	开始时间:
+	<input id="begin" type="text" value="2018-11-01">&nbsp;&nbsp;&nbsp;&nbsp;
+	结束时间:
+	<input id="end" type="text" value="2018-11-20">&nbsp;&nbsp;&nbsp;&nbsp;
+	<input type="button" onclick="show()" value="查询">
+
+
+	<div id="div" style="width:1140px;height:600px"></div>
+
+	<script type="text/javascript">
+		function show() {
+			var mychart = echarts.init($("#div")[0]);
+			var option = {
+				title : {
+					text : '新发地市场大白菜价格走势图',
+				},
+				legend : {
+					data : [ '最低价格', '平均价格', '最高价格' ]
+				},
+				tooltip : {
+					trigger : 'axis'
+				},
+				xAxis : {
+					type : 'category',
+					data : []
+				},
+				yAxis : {
+					type : 'value'
+				},
+				series : [ {
+					name : '最低价格',
+					type : 'line',
+					data : []
+				}, {
+					name : '平均价格',
+					type : 'line',
+					data : []
+				}, {
+					name : '最高价格',
+					type : 'line',
+					data : []
+				} ]
+			};
+			mychart.showLoading();
+			mychart.setOption(option);
+			var begin = $("#begin").val();
+			var end = $("#end").val();
+			var lowprices = [];
+			var avgprices = [];
+			var hprices = [];
+			var dates = [];
+			$.ajax({
+				type : "GET",
+				url : "getAllSc",
+				data : {
+					begin : begin,
+					end : end
+				},
+				dataType : 'json',
+				success : function(result) {
+					if (result) {
+						for (var i = result.length - 1; i >= 0; i--) {
+							lowprices.push(result[i].lowprice);
+							avgprices.push(result[i].avgprice);
+							hprices.push(result[i].hprice);
+							var time = new Date(result[i].creatdate);
+							dates.push((time.getMonth() + 1) + '-' + time.getDate());
+						}
+						mychart.hideLoading();
+						mychart.setOption({
+							xAxis : {
+								data : dates
+							},
+							series : [ {
+								name : '最低价格',
+								type : 'line',
+								data : lowprices
+							}, {
+								name : '平均价格',
+								type : 'line',
+								data : avgprices
+							}, {
+								name : '最高价格',
+								type : 'line',
+								data : hprices
+							} ]
+						})
+					}
+				}
+			})
+		}
+	</script>
+</body>
+</html>
