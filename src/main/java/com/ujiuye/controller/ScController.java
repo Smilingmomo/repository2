@@ -19,4 +19,8 @@ public class ScController {
 	public @ResponseBody List<Sc> getAllSc(String begin, String end) {
 		return service.getSc(begin, end);
 	}
+
+	public void www() {
+		System.out.println("新增方法");
+	}
 }
